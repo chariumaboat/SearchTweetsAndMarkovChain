@@ -5,6 +5,8 @@ from dotenv import load_dotenv
 import argparse
 from janome.tokenizer import Tokenizer
 import tweepy
+from pprint import pprint
+
 
 load_dotenv('.env') 
 
@@ -54,7 +56,8 @@ def generate_text(words_list):
                markov[(w1, w2)] = []
            markov[(w1, w2)].append(word)
        w1, w2 = w2, word
- 
+   # dict debug
+   pprint(markov)
    # Automatic sentence generation
    count_kuten = 0 #  "。"
    num_sentence = num_sentence
@@ -63,13 +66,17 @@ def generate_text(words_list):
    while count_kuten < num_sentence:
        try:
            tmp = random.choice(markov[(w1, w2)])
+           # debug
+           print("add text is " + tmp)
            sentence += tmp
        # I don't understand the meaning of this code
-       except KeyError:
+       except KeyError as e:
+           print(e)
            break
        except Exception as e:
            print(e)
-           print(type(e))
+           print("type is " + type(e))
+           break
        if(tmp=='。'):
            count_kuten += 1
            sentence += '\n'
