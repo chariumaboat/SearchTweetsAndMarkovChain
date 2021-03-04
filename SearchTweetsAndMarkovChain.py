@@ -104,7 +104,7 @@ if __name__ == "__main__":
     # Search for tweets data and generate text
     tweet_text = generate_text(wakati(tweet_search(search_words)))
     # trim
-    tweet_text_140 = tweet_text[1:140]
+    tweet_text_140 = tweet_text[0:139]
     print("-----Text trimmed to 140 characters-----")
     print(tweet_text_140)
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
