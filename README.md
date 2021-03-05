@@ -10,21 +10,12 @@ And make useless tweets.
 pip install tweepy
 pip install janome
 pip install markovify
-pip install python-dotenv
+pip install configparser
 ```
 
 - API settings
-```bash
-touch .env
-vi .env
-```
-
-```bash
-consumer_key='$YourAPIKey'
-consumer_secret='$YourAPIKey'
-access_key='$YourAPIKey'
-access_secret='$YourAPIKey'
-```
+  - make `setting.ini`
+  - [docs](https://docs.python.org/ja/3/library/configparser.html)
 
 - Run
 

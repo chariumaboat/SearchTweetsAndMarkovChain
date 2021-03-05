@@ -1,19 +1,54 @@
 import sys
 import random
-import os
-from dotenv import load_dotenv
 import argparse
 from janome.tokenizer import Tokenizer
 import tweepy
 from pprint import pprint
+import configparser
 
+# Accepts search terms as arguments
+search_words = []
+parser = argparse.ArgumentParser(description='search words(space separated),environment name')
+parser.add_argument('-w','--words',metavar='words',type=str,help='search words(space separated)',default="")
+parser.add_argument('-e','--env',metavar='env',type=str,help='environment name',default="")
+args = parser.parse_args()
+print(args)
+if args.words == "" or args.env == "":
+    print("No Argument")
+    sys.exit()
 
-load_dotenv('.env') 
+# Split space separators into comma-separated lists
+s = args.words
+search_words = s.split()
+print("search_words is " + str(search_words))
 
-consumer_key = os.environ.get('consumer_key')
-consumer_secret = os.environ.get('consumer_secret')
-access_key = os.environ.get('access_key')
-access_secret = os.environ.get('access_secret')
+# select environment and Config
+config = configparser.ConfigParser()
+config.read('setting.ini')
+envName = args.env
+print("envName is " + envName)
+consumer_key = config.get(envName, 'consumer_key')
+consumer_secret = config.get(envName, 'consumer_secret')
+access_key = config.get(envName, 'access_key')
+access_secret = config.get(envName, 'access_secret')
+
+# Search and markov chain and Tweet
+def main():
+    # Search for tweets data and generate text
+    tweet_text = generate_text(wakati(tweet_search(search_words)))
+    # trim
+    tweet_text_140 = tweet_text[0:139]
+    print("-----Text trimmed to 140 characters-----")
+    print(tweet_text_140)
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_key, access_secret)
+    api = tweepy.API(auth)
+    # tweet
+    try:
+        api.update_status(tweet_text_140)
+    except Exception as e:
+        print(e)
+        print(type(e))
 
 # Search 100 words passed from the argument
 def tweet_search(search_words):
@@ -88,31 +123,4 @@ def generate_text(words_list):
    return sentence
     
 if __name__ == "__main__":
-    # Accepts search terms as arguments
-    search_words = []
-    parser = argparse.ArgumentParser(description='search words(space separated)')
-    parser.add_argument('-w','--words',metavar='words',type=str,help='search words(space separated)',default="")
-    args = parser.parse_args()
-    print(args)
-    if args.words == "":
-        print("No Argument")
-        sys.exit()
-    # Split space separators into comma-separated lists
-    s = args.words
-    search_words = s.split()
-    print(search_words)
-    # Search for tweets data and generate text
-    tweet_text = generate_text(wakati(tweet_search(search_words)))
-    # trim
-    tweet_text_140 = tweet_text[0:139]
-    print("-----Text trimmed to 140 characters-----")
-    print(tweet_text_140)
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
-    # tweet
-    try:
-        api.update_status(tweet_text_140)
-    except Exception as e:
-        print(e)
-        print(type(e))
+    main()
