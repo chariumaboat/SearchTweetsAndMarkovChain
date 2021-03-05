@@ -20,6 +20,6 @@ pip install configparser
 - Run
 
 ```bash
-python SearchTweetsAndMarkovChain.py -w '$SearchWord'
-python SearchTweetsAndMarkovChain.py -w '$SearchWord1 $SearchWord2 $SearchWord3'
+python SearchTweetsAndMarkovChain.py -w '$SearchWord' -e '$EnvName'
+python SearchTweetsAndMarkovChain.py -w '$SearchWord1 $SearchWord2 $SearchWord3' -e '$EnvName'
 ```
