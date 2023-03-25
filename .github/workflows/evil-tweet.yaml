@@ -1,0 +1,48 @@
+name: evil_tweet
+on:
+  workflow_dispatch:
+    inputs:
+      word:
+        description: "EVIL_WORD"
+        required: true
+
+#   schedule:
+#     - cron: "*/15 * * * *"
+
+jobs:
+  okera:
+    name: evil_tweet
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          cache: "pip"
+
+      - name: twitter key decode
+        env:
+          JSON_DECODE: ${{ secrets.NOGAS }}
+
+        run: |
+          echo -n $JSON_DECODE | base64 --decode > ./setting.ini
+
+      - name: pip install
+        run: pip install -r requirements.txt
+
+      - name: okera_cal_delete
+        id: okera_cal_delete
+        run: |
+          python SearchTweetsAndMarkovChain.py -w ${{ inputs.word }} -e nogaslighting

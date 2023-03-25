@@ -7,10 +7,7 @@ And make useless tweets.
 - Installation of required libraries
 
 ```bash
-pip install tweepy
-pip install janome
-pip install markovify
-pip install configparser
+pip install -r requirements.txt
 ```
 
 - API settings
