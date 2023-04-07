@@ -2,7 +2,7 @@ name: evil_tweet
 on:
   schedule:
     - cron: "*/30 * * * *"
-  # workflow_dispatch:
+  workflow_dispatch:
   #   inputs:
   #     word:
   #       description: "EVIL_WORD"
