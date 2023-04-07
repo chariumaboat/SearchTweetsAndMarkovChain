@@ -1,13 +1,14 @@
 name: evil_tweet
 on:
-  workflow_dispatch:
-    inputs:
-      word:
-        description: "EVIL_WORD"
-        required: true
+  schedule:
+    - cron: "*/30 * * * *"
+  # workflow_dispatch:
+  #   inputs:
+  #     word:
+  #       description: "EVIL_WORD"
+  #       required: true
 
-#   schedule:
-#     - cron: "*/15 * * * *"
+
 
 jobs:
   okera:
@@ -42,7 +43,7 @@ jobs:
       - name: pip install
         run: pip install -r requirements.txt
 
-      - name: okera_cal_delete
-        id: okera_cal_delete
+      - name: evil_tweet
+        id: evil_tweet
         run: |
-          python SearchTweetsAndMarkovChain.py -w ${{ inputs.word }} -e nogaslighting
+          python SearchTweetsAndMarkovChain.py -w `shuf -e カバール ディープステート 人工地震 ケムトレイル フラットアース 地球平面 -n 1` -e nogaslighting
