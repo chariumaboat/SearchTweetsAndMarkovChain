@@ -3,10 +3,10 @@ on:
   schedule:
     - cron: "*/15 * * * *"
   workflow_dispatch:
-  #   inputs:
-  #     word:
-  #       description: "EVIL_WORD"
-  #       required: true
+    inputs:
+      word:
+        description: "EVIL_WORD"
+        required: true
 
 
 
@@ -43,6 +43,13 @@ jobs:
       - name: pip install
         run: pip install -r requirements.txt
 
+      - name: check input parameter
+        run: |
+          if [ -z "${{ github.event.inputs.word }}" ]; then
+            echo "No input parameter provided, skipping the job."
+            exit 0
+          fi
+          
       - name: evil_tweet
         id: evil_tweet
         run: |
