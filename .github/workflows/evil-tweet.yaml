@@ -43,14 +43,13 @@ jobs:
       - name: pip install
         run: pip install -r requirements.txt
 
-      - name: check input parameter
-        run: |
-          if [ -z "${{ github.event.inputs.word }}" ]; then
-            echo "No input parameter provided, skipping the job."
-            exit 0
-          fi
-          
-      - name: evil_tweet
-        id: evil_tweet
+      - name: schedule_evil_tweet
+        if: github.event_name != 'workflow_dispatch'
         run: |
           python SearchTweetsAndMarkovChain.py -w `shuf -e カバール ディープステート 人工地震 ケムトレイル フラットアース 地球平面 -n 1` -e nogaslighting
+
+      - name: workflow_dispatch_evil_tweet
+        if: github.event_name == 'workflow_dispatch'
+        id: workflow_dispatch_evil_tweet
+        run: |
+          python SearchTweetsAndMarkovChain.py -w ${{ inputs.word }} -e nogaslighting
