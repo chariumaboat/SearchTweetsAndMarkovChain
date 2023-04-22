@@ -39,8 +39,11 @@ access_secret = config.get(envName, 'access_secret')
 
 def main():
     # Search for tweets data and generate text
-    tweet_text = retranslation(generate_text(
-        wakati(tweet_search(search_words))))
+    tweet_text = generate_text(wakati(tweet_search(search_words)))
+    try:
+        tweet_text = retranslation(tweet_text)
+    except:
+        pass
     print(tweet_text)
     # trim
     tweet_text_140 = tweet_text[0:139]
