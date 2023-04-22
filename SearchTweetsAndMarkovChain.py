@@ -76,8 +76,8 @@ def tweet_search(search_words):
             strResult += result.text
     print("-----Generate text based on this text-----")
     print(strResult)
-    if strResult == ""]
-            sys.exit(0)
+    if strResult == "":
+        sys.exit(0)
     print(strResult)
     return strResult
 
@@ -143,7 +143,7 @@ def generate_text(words_list):
 def retranslation(text):
     translated = GoogleTranslator(source='auto', target='en').translate(text)
     translated2 = GoogleTranslator(
-        source = 'auto', target = 'ja').translate(translated)
+        source='auto', target='ja').translate(translated)
     return translated2
 
 
