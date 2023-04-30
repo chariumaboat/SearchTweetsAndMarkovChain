@@ -78,6 +78,7 @@ def main():
     except Exception as e:
         print(e)
     else:
+        print("-----Post Tweet Response-----")
         print(post_tweet)
 
 def tweet_search(search_words, envName):
