@@ -70,6 +70,7 @@ def main():
     # trim
     tweet_text_140 = tweet_text[0:120]
     print("-----Post Text trimmed to 140 characters-----")
+    print(len(tweet_text_140))
     print(tweet_text_140)
     # tweet
     api = auth_api_v2(envName)
