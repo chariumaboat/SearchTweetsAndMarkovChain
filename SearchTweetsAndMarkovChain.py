@@ -68,7 +68,7 @@ def main():
         pass
     print(tweet_text)
     # trim
-    tweet_text_140 = tweet_text[0:139]
+    tweet_text_140 = tweet_text[0:130]
     print("-----Post Text trimmed to 140 characters-----")
     print(tweet_text_140)
     # tweet
