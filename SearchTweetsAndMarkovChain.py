@@ -51,54 +51,41 @@ if args.words == "" or args.env == "":
     print("No Argument")
     sys.exit()
 
+envName = args.env
+
 # Split space separators into comma-separated lists
 s = args.words
 search_words = s.split()
 print("search_words is " + str(search_words))
 
-# select environment and Config
-config = configparser.ConfigParser()
-config.read('setting.ini')
-envName = args.env
-print("envName is " + envName)
-consumer_key = config.get(envName, 'consumer_key')
-consumer_secret = config.get(envName, 'consumer_secret')
-access_key = config.get(envName, 'access_key')
-access_secret = config.get(envName, 'access_secret')
-
 
 def main():
     # Search for tweets data and generate text
-    tweet_text = generate_text(wakati(tweet_search(search_words)))
+    tweet_text = generate_text(wakati(tweet_search(search_words, envName)))
     try:
         tweet_text = retranslation(tweet_text)
     except:
         pass
     print(tweet_text)
     # trim
-    tweet_text_140 = tweet_text[0:139]
+    tweet_text_140 = tweet_text[0:130]
     print("-----Post Text trimmed to 140 characters-----")
     print(tweet_text_140)
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
     # tweet
+    api = auth_api_v2(envName)
     try:
-        auth_api_v2.create_tweet(text=tweet_text)
+        post_tweet = api.create_tweet(text=tweet_text)
     except Exception as e:
         print(e)
-        print(type(e))
+    else:
+        print(post_tweet)
 
-# Search 100 words passed from the argument
-
-
-def tweet_search(search_words):
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
+def tweet_search(search_words, envName):
+    # Search 100 words passed from the argument
+    api = auth_api_v1(envName)
+    # 特定ワードを検索する
     set_count = 100
-    word = search_words
-    results = api.search(q=word, count=set_count)
+    results = api.search_tweets(q=search_words, count=set_count)
     strResult = ""
     for result in results:
         # if "RT" not in result.text and "@" not in result.text:
@@ -125,8 +112,6 @@ def wakati(text):
 
 def generate_text(words_list):
     num_sentence = 5
-    words_list = words_list
-
     # Create a table for Markov chains
     markov = {}
     w1 = ""
