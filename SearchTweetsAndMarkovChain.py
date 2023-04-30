@@ -7,6 +7,36 @@ from pprint import pprint
 import configparser
 from deep_translator import GoogleTranslator
 
+
+def auth_api_v2(envName):
+    config = configparser.ConfigParser(interpolation=None)
+    config.read('setting.ini')
+    consumer_key = config.get(envName, 'consumer_key')
+    consumer_secret = config.get(envName, 'consumer_secret')
+    access_key = config.get(envName, 'access_key')
+    access_secret = config.get(envName, 'access_secret')
+    bearer_token = config.get(envName, 'bearer_token')
+    client = tweepy.Client(bearer_token=bearer_token,
+                           consumer_key=consumer_key,
+                           consumer_secret=consumer_secret,
+                           access_token=access_key,
+                           access_token_secret=access_secret)
+    return client
+
+
+def auth_api_v1(envName):
+    config = configparser.ConfigParser()
+    config.read('setting.ini')
+    consumer_key = config.get(envName, 'consumer_key')
+    consumer_secret = config.get(envName, 'consumer_secret')
+    access_key = config.get(envName, 'access_key')
+    access_secret = config.get(envName, 'access_secret')
+    auth = tweepy.OAuth1UserHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_key, access_secret)
+    api = tweepy.API(auth)
+    return api
+
+
 # Accepts search terms as arguments
 search_words = []
 parser = argparse.ArgumentParser(
@@ -21,54 +51,41 @@ if args.words == "" or args.env == "":
     print("No Argument")
     sys.exit()
 
+envName = args.env
+
 # Split space separators into comma-separated lists
 s = args.words
 search_words = s.split()
 print("search_words is " + str(search_words))
 
-# select environment and Config
-config = configparser.ConfigParser()
-config.read('setting.ini')
-envName = args.env
-print("envName is " + envName)
-consumer_key = config.get(envName, 'consumer_key')
-consumer_secret = config.get(envName, 'consumer_secret')
-access_key = config.get(envName, 'access_key')
-access_secret = config.get(envName, 'access_secret')
-
 
 def main():
     # Search for tweets data and generate text
-    tweet_text = generate_text(wakati(tweet_search(search_words)))
+    tweet_text = generate_text(wakati(tweet_search(search_words, envName)))
     try:
         tweet_text = retranslation(tweet_text)
     except:
         pass
     print(tweet_text)
     # trim
-    tweet_text_140 = tweet_text[0:139]
+    tweet_text_140 = tweet_text[0:130]
     print("-----Post Text trimmed to 140 characters-----")
     print(tweet_text_140)
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
     # tweet
+    api = auth_api_v2(envName)
     try:
-        api.update_status(tweet_text_140)
+        post_tweet = api.create_tweet(text=tweet_text)
     except Exception as e:
         print(e)
-        print(type(e))
+    else:
+        print(post_tweet)
 
-# Search 100 words passed from the argument
-
-
-def tweet_search(search_words):
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(access_key, access_secret)
-    api = tweepy.API(auth)
+def tweet_search(search_words, envName):
+    # Search 100 words passed from the argument
+    api = auth_api_v1(envName)
+    # 特定ワードを検索する
     set_count = 100
-    word = search_words
-    results = api.search(q=word, count=set_count)
+    results = api.search_tweets(q=search_words, count=set_count)
     strResult = ""
     for result in results:
         # if "RT" not in result.text and "@" not in result.text:
@@ -81,10 +98,9 @@ def tweet_search(search_words):
     print(strResult)
     return strResult
 
-# Create a dictionary by splitting text data using Janome
-
 
 def wakati(text):
+    # Create a dictionary by splitting text data using Janome
     text = text.replace('\n', '')
     text = text.replace('\r', '')
     t = Tokenizer()
@@ -96,8 +112,6 @@ def wakati(text):
 
 def generate_text(words_list):
     num_sentence = 5
-    words_list = words_list
-
     # Create a table for Markov chains
     markov = {}
     w1 = ""
