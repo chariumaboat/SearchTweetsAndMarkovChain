@@ -68,13 +68,13 @@ def main():
         pass
     print(tweet_text)
     # trim
-    tweet_text_140 = tweet_text[0:130]
+    tweet_text_140 = tweet_text[0:139]
     print("-----Post Text trimmed to 140 characters-----")
     print(tweet_text_140)
     # tweet
     api = auth_api_v2(envName)
     try:
-        post_tweet = api.create_tweet(text=tweet_text)
+        post_tweet = api.create_tweet(text=tweet_text_140)
     except Exception as e:
         print(e)
     else:
