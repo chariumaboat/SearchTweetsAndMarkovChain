@@ -7,6 +7,36 @@ from pprint import pprint
 import configparser
 from deep_translator import GoogleTranslator
 
+
+def auth_api_v2(envName):
+    config = configparser.ConfigParser(interpolation=None)
+    config.read('setting.ini')
+    consumer_key = config.get(envName, 'consumer_key')
+    consumer_secret = config.get(envName, 'consumer_secret')
+    access_key = config.get(envName, 'access_key')
+    access_secret = config.get(envName, 'access_secret')
+    bearer_token = config.get(envName, 'bearer_token')
+    client = tweepy.Client(bearer_token=bearer_token,
+                           consumer_key=consumer_key,
+                           consumer_secret=consumer_secret,
+                           access_token=access_key,
+                           access_token_secret=access_secret)
+    return client
+
+
+def auth_api_v1(envName):
+    config = configparser.ConfigParser()
+    config.read('setting.ini')
+    consumer_key = config.get(envName, 'consumer_key')
+    consumer_secret = config.get(envName, 'consumer_secret')
+    access_key = config.get(envName, 'access_key')
+    access_secret = config.get(envName, 'access_secret')
+    auth = tweepy.OAuth1UserHandler(consumer_key, consumer_secret)
+    auth.set_access_token(access_key, access_secret)
+    api = tweepy.API(auth)
+    return api
+
+
 # Accepts search terms as arguments
 search_words = []
 parser = argparse.ArgumentParser(
@@ -54,7 +84,7 @@ def main():
     api = tweepy.API(auth)
     # tweet
     try:
-        api.update_status(tweet_text_140)
+        auth_api_v2.create_tweet(text=tweet_text)
     except Exception as e:
         print(e)
         print(type(e))
@@ -81,10 +111,9 @@ def tweet_search(search_words):
     print(strResult)
     return strResult
 
-# Create a dictionary by splitting text data using Janome
-
 
 def wakati(text):
+    # Create a dictionary by splitting text data using Janome
     text = text.replace('\n', '')
     text = text.replace('\r', '')
     t = Tokenizer()
