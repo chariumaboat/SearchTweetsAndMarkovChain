@@ -4,6 +4,10 @@ from bs4 import BeautifulSoup
 import sys
 from util import generate_text, wakati, auth_api_v2, retranslation
 
+# dragon-excalibur
+# newhakogame1962
+# ukannh
+
 def cleanhtml(raw_html):
     cleanr = re.compile("<.*?>")
     cleantext = re.sub(cleanr, "", raw_html)
@@ -25,8 +29,6 @@ def main():
         str_list = scraping(url)
         text = "".join(str_list)
         getTxt += text
-    getTxt = text
-    print(getTxt)
     # Search for tweets data and generate text
     tweet_text = generate_text(wakati(getTxt))
     try:
