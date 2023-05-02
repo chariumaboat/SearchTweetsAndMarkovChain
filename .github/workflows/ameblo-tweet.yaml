@@ -52,4 +52,4 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         id: workflow_dispatch_evil_tweet
         run: |
-          python ameblo_markov.py -w ${{ inputs.word }} -e nogaslighting
+          python ameblo_markov.py ${{ inputs.word }} 10 nogaslighting
