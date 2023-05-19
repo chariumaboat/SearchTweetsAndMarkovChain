@@ -1,7 +1,7 @@
 name: evil_tweet_ameblo
 on:
-  schedule:
-    - cron: "*/30 * * * *"
+  # schedule:
+  #   - cron: "*/30 * * * *"
   workflow_dispatch:
     inputs:
       word:
