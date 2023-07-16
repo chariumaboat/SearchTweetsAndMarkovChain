@@ -1,0 +1,55 @@
+name: evil_tweet_livedoor
+on:
+  schedule:
+    - cron: "30 * * * *"
+  workflow_dispatch:
+    inputs:
+      word:
+        description: "AMEBLO_ID"
+        required: true
+
+
+
+jobs:
+  okera:
+    name: evil_tweet_livedoor
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+          cache: "pip"
+
+      - name: twitter key decode
+        env:
+          JSON_DECODE: ${{ secrets.NOGAS }}
+
+        run: |
+          echo -n $JSON_DECODE | base64 --decode > ./setting.ini
+
+      - name: pip install
+        run: pip install -r requirements.txt
+
+      - name: schedule_evil_tweet
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          python omai_markkov.py nogaslighting
+
+      - name: workflow_dispatch_evil_tweet
+        if: github.event_name == 'workflow_dispatch'
+        id: workflow_dispatch_evil_tweet
+        run: |
+          python omai_markkov.py nogaslighting
