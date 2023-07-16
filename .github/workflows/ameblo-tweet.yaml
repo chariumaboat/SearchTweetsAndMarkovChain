@@ -46,7 +46,7 @@ jobs:
       - name: schedule_evil_tweet
         if: github.event_name != 'workflow_dispatch'
         run: |
-          python ameblo_markov.py `shuf -e dragon-excalibur newhakogame1962 -n 1` 10 nogaslighting
+          python ameblo_markov.py `shuf -e dragon-excalibur -n 1` 10 nogaslighting
 
       - name: workflow_dispatch_evil_tweet
         if: github.event_name == 'workflow_dispatch'
