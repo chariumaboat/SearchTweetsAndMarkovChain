@@ -39,12 +39,12 @@ def main():
         pass
     tweet_text = generate_text(wakati(getTxt))
     try:
-        tweet_text = reverse_retranslation(tweet_text)
+        tweet_text = reverse_retranslation(tweet_text).lstrip("。")
     except:
         pass
     print(tweet_text)
     # trim
-    tweet_text_140 = tweet_text[0:120]
+    tweet_text_140 = tweet_text[0:139]
     print("-----Post Text trimmed to 140 characters-----")
     print(len(tweet_text_140))
     print(tweet_text_140)
