@@ -7,6 +7,7 @@ from pprint import pprint
 import configparser
 from deep_translator import GoogleTranslator
 
+
 def auth_api_v2(envName):
     config = configparser.ConfigParser(interpolation=None)
     config.read('setting.ini')
@@ -92,6 +93,14 @@ def generate_text(words_list):
 
 
 def retranslation(text):
+    translated = GoogleTranslator(source='auto', target='en').translate(text)
+    translated2 = GoogleTranslator(
+        source='auto', target='ja').translate(translated)
+    return translated2
+
+
+def reverse_retranslation(text):
+    text = text[::-1]
     translated = GoogleTranslator(source='auto', target='en').translate(text)
     translated2 = GoogleTranslator(
         source='auto', target='ja').translate(translated)

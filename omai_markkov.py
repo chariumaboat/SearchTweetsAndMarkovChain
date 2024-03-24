@@ -2,7 +2,7 @@ import requests
 import re
 from bs4 import BeautifulSoup
 import sys
-from util import generate_text, wakati, auth_api_v2, retranslation
+from util import generate_text, wakati, auth_api_v2, reverse_retranslation
 import re
 
 
@@ -39,7 +39,7 @@ def main():
         pass
     tweet_text = generate_text(wakati(getTxt))
     try:
-        tweet_text = retranslation(tweet_text)
+        tweet_text = reverse_retranslation(tweet_text)
     except:
         pass
     print(tweet_text)
