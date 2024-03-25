@@ -101,6 +101,7 @@ def retranslation(text):
 
 def reverse_retranslation(text):
     text = text[::-1]
+    text = text.replace('。', '')
     translated = GoogleTranslator(source='auto', target='en').translate(text)
     translated2 = GoogleTranslator(
         source='auto', target='ja').translate(translated)
