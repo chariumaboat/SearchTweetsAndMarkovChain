@@ -57,5 +57,5 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: realtime_data.zip
+          name: realtime_data.json
       - run: unzip *zip
