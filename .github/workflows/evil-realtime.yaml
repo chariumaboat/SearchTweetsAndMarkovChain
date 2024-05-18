@@ -35,6 +35,12 @@ jobs:
       - name: pip install
         run: pip install -r requirements.txt
 
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: realtime_data.json
+          path: realtime_data.json
+
       - name: schedule_evil_tweet
         if: github.event_name != 'workflow_dispatch'
         run: |
