@@ -38,8 +38,8 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
-          name: realtime_data.json
-          path: realtime_data.json
+          name: realtime_data.zip
+      - run: unzip *zip
 
       - name: schedule_evil_tweet
         if: github.event_name != 'workflow_dispatch'
