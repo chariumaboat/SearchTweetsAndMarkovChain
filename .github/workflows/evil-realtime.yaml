@@ -35,12 +35,6 @@ jobs:
       - name: pip install
         run: pip install -r requirements.txt
 
-      - name: Download Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: realtime_data.zip
-      - run: unzip *zip
-
       - name: schedule_evil_tweet
         if: github.event_name != 'workflow_dispatch'
         run: |
@@ -58,3 +52,10 @@ jobs:
           path: realtime_data.json
           if-no-files-found: error
           retention-days: 90          
+
+
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: realtime_data.zip
+      - run: unzip *zip
