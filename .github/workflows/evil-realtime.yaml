@@ -38,13 +38,13 @@ jobs:
       - name: schedule_evil_tweet
         if: github.event_name != 'workflow_dispatch'
         run: |
-          python ameblo_markov.py `shuf -e dragon-excalibur -n 1` 10 nogaslighting
+          python realtime_true.py nogaslighting
 
       - name: workflow_dispatch_evil_tweet
         if: github.event_name == 'workflow_dispatch'
         id: workflow_dispatch_evil_tweet
         run: |
-          python ameblo_markov.py ${{ inputs.word }} 10 nogaslighting
+          python realtime_true.py nogaslighting
 
       - uses: actions/upload-artifact@v4
         with:
