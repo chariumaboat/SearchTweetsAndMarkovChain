@@ -1,0 +1,54 @@
+name: evil_realtime
+on:
+  push:
+  # workflow_dispatch:
+
+jobs:
+  okera:
+    name: evil_realtime
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    defaults:
+      run:
+        shell: bash
+        working-directory: ./
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+          cache: "pip"
+
+      - name: twitter key decode
+        env:
+          JSON_DECODE: ${{ secrets.NOGAS }}
+        run: |
+          echo -n $JSON_DECODE | base64 --decode > ./setting.ini
+
+      - name: pip install
+        run: pip install -r requirements.txt
+
+      - name: schedule_evil_tweet
+        if: github.event_name != 'workflow_dispatch'
+        run: |
+          python ameblo_markov.py `shuf -e dragon-excalibur -n 1` 10 nogaslighting
+
+      - name: workflow_dispatch_evil_tweet
+        if: github.event_name == 'workflow_dispatch'
+        id: workflow_dispatch_evil_tweet
+        run: |
+          python ameblo_markov.py ${{ inputs.word }} 10 nogaslighting
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: realtime_data.json
+          path: realtime_data.json
+          if-no-files-found: error
+          retention-days: 90          
