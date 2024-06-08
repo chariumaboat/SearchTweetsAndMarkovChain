@@ -39,7 +39,7 @@ jobs:
 
       - name: schedule_evil_tweet
         if: github.event_name != 'workflow_dispatch'
-        run: 
+        run: |
           mv ./realtime_data.json/realtime_data.json ./tmp.json
           rm -rf ./realtime_data.json
           mv tmp.json realtime_data.json
