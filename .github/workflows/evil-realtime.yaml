@@ -14,10 +14,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
     
-      # - name: Download Artifact
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: realtime_data.json
+      - name: Download Previous Vulnerability List
+        uses: dawidd6/action-download-artifact@v5
+        continue-on-error: true
+        with:
+          branch: main
+          workflow: realtime_data.json
+          path: ./
+
   okera:
     name: evil_realtime
     runs-on: ubuntu-latest
