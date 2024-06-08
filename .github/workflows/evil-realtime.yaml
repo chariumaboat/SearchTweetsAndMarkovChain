@@ -4,25 +4,7 @@ on:
   # workflow_dispatch:
 
 jobs:
-  artifact_dl:
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-    
-      - name: Download Previous Vulnerability List
-        uses: dawidd6/action-download-artifact@v5
-        continue-on-error: true
-        with:
-          branch: main
-          workflow: evil-realtime.yaml
-          path: ./
-
-  okera:
+  devil:
     name: evil_realtime
     runs-on: ubuntu-latest
     permissions:
@@ -30,13 +12,21 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4        
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v4
         with:
           python-version: 3.11
           cache: "pip"
+     
+      - name: Download Previous Vulnerability List
+        uses: dawidd6/action-download-artifact@v5
+        continue-on-error: true
+        with:
+          branch: main
+          workflow: evil-realtime.yaml
+          path: ./  
 
       - name: twitter key decode
         env:
