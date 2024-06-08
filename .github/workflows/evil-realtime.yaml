@@ -19,7 +19,7 @@ jobs:
         continue-on-error: true
         with:
           branch: main
-          workflow: realtime_data.json
+          workflow: evil-realtime.yaml
           path: ./
 
   okera:
