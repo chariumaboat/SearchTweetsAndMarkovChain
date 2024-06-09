@@ -1,5 +1,6 @@
 name: evil_realtime
 on:
+  push:
   schedule:
     - cron: "30 * * * *"
   workflow_dispatch:
@@ -53,6 +54,7 @@ jobs:
           mv ./realtime_data.json/realtime_data.json ./tmp.json
           rm -rf ./realtime_data.json
           mv tmp.json realtime_data.json
+          mkdir img
           python realtime_true.py nogaslighting
 
       - uses: actions/upload-artifact@v4

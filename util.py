@@ -1,11 +1,13 @@
-import sys
 import random
-import argparse
 from janome.tokenizer import Tokenizer
 import tweepy
 from pprint import pprint
 import configparser
 from deep_translator import GoogleTranslator
+import requests
+import json
+import os
+import random
 
 
 def auth_api_v2(envName):
@@ -106,3 +108,64 @@ def reverse_retranslation(text):
     translated2 = GoogleTranslator(
         source='auto', target='ja').translate(translated)
     return translated2
+
+
+def get_new_data():
+    base_url = 'https://search.yahoo.co.jp/realtime/api/v1/pagination?p='
+    keyword = random.choice(["毒ワクチン", "人工地震", "酸化グラフェン", "反グローバリズム", "イルミナティ"])
+    r = requests.get(f'{base_url}{keyword}')
+    j = json.loads(r.text)
+    data = j['timeline']['entry']
+    return data
+
+
+def save_json_to_file(data, filename):
+    with open(filename, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=4)
+
+
+def merge_data(data, local_data):
+    combined_data = list(data)
+    for item in local_data:
+        if item not in combined_data:
+            combined_data.append(item)
+    return combined_data
+
+
+def read_local_data(path):
+    with open(path, 'r') as file:
+        local_data = json.load(file)
+        return local_data
+
+
+def save_image(url, id):
+    r = requests.get(url)
+    with open(f'./img/{id}.png', 'wb') as file:
+        file.write(r.content)
+
+
+def select_random_image(img_dir):
+    image_paths = [os.path.join(img_dir, f) for f in os.listdir(
+        img_dir) if os.path.isfile(os.path.join(img_dir, f))]
+    if not image_paths:
+        return None
+    random_index = random.randrange(len(image_paths))
+    return image_paths[random_index]
+
+
+def get_all_image():
+    local_data = read_local_data('./realtime_data.json')
+    print(f'local data length: {len(local_data)}')
+    new_data = get_new_data()
+    saved_ids = [i['id'] for i in local_data]
+    for i in new_data:
+        if i['id'] not in saved_ids:
+            local_data.append(i)
+        # 保存するため、mediaキーがあるか確認
+        if 'media' in i:
+            # mediaキーにあるリストを出力
+            for flag, m in enumerate(i['media']):
+                url = m['item']['mediaUrl']
+                id = i['id'] + '_' + str(flag)
+                save_image(url, id)
+    return select_random_image("img")

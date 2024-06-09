@@ -4,35 +4,7 @@ import random
 from pprint import pprint
 import re
 import sys
-from util import generate_text, wakati, auth_api_v2, reverse_retranslation, retranslation
-
-
-def get_new_data():
-    base_url = 'https://search.yahoo.co.jp/realtime/api/v1/pagination?p='
-    keyword = random.choice(["毒ワクチン", "人工地震", "酸化グラフェン", "反グローバリズム", "イルミナティ"])
-    r = requests.get(f'{base_url}{keyword}')
-    j = json.loads(r.text)
-    data = j['timeline']['entry']
-    return data
-
-
-def save_json_to_file(data, filename):
-    with open(filename, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
-
-
-def merge_data(data, local_data):
-    combined_data = list(data)
-    for item in local_data:
-        if item not in combined_data:
-            combined_data.append(item)
-    return combined_data
-
-
-def read_local_data(path):
-    with open(path, 'r') as file:
-        local_data = json.load(file)
-        return local_data
+from util import *
 
 
 def clean_string(input_string):
@@ -63,9 +35,20 @@ tweet_text_140 = tweet_text[0:139]
 print("-----Post Text trimmed to 140 characters-----")
 print(len(tweet_text_140))
 print(tweet_text_140)
-# tweet
-api = auth_api_v2(sys.argv[1])
-try:
-    post_tweet = api.create_tweet(text=tweet_text_140)
-except Exception as e:
-    print(e)
+
+if random.randint(1, 5) == 1:
+    filepath = get_all_image()
+    api = auth_api_v1(sys.argv[1])
+    media_id = api.media_upload(filepath).media_id_string
+    api = auth_api_v2(sys.argv[1])
+    try:
+        post_tweet = api.create_tweet(
+            text=tweet_text_140, media_ids=[media_id])
+    except Exception as e:
+        print(e)
+else:
+    api = auth_api_v2(sys.argv[1])
+    try:
+        post_tweet = api.create_tweet(text=tweet_text_140)
+    except Exception as e:
+        print(e)
