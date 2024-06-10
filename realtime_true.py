@@ -36,7 +36,8 @@ print("-----Post Text trimmed to 140 characters-----")
 print(len(tweet_text_140))
 print(tweet_text_140)
 
-if random.randint(1, 5) == 1:
+if False:
+    # if random.randint(1, 5) == 1:
     filepath = get_all_image()
     api = auth_api_v1(sys.argv[1])
     media_id = api.media_upload(filepath).media_id_string
