@@ -62,8 +62,6 @@ def generate_text(words_list):
                 markov[(w1, w2)] = []
             markov[(w1, w2)].append(word)
         w1, w2 = w2, word
-    # dict debug
-    pprint(markov)
     # Automatic sentence generation
     count_kuten = 0  # "。"
     num_sentence = num_sentence
