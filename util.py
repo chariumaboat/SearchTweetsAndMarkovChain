@@ -167,3 +167,18 @@ def get_all_image():
                 id = i['id'] + '_' + str(flag)
                 save_image(url, id)
     return select_random_image("img")
+
+
+def random_select_img():
+    local_data = read_local_data('./realtime_data.json')
+    print(f'local data length: {len(local_data)}')
+    media_list = []
+    for i in local_data:
+        if i['media']:
+            for url in i['media']:
+                print(url['item']['mediaUrl'])
+                media_list.append(url['item']['mediaUrl'])
+    dl_url = random.choice(media_list)
+    r = requests.get(dl_url)
+    with open(f'dl.png', 'wb') as file:
+        file.write(r.content)
