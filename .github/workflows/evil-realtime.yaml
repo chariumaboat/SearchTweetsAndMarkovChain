@@ -22,7 +22,7 @@ jobs:
           python-version: 3.11
           cache: "pip"
      
-      - name: Download Previous Vulnerability List
+      - name: dl json
         uses: dawidd6/action-download-artifact@v5
         continue-on-error: true
         with:
