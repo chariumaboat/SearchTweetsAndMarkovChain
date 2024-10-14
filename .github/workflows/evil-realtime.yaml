@@ -1,8 +1,7 @@
 name: evil_realtime
 on:
-  push:
-  schedule:
-    - cron: "0,30 * * * *"
+  # schedule:
+  #   - cron: "0,30 * * * *"
   workflow_dispatch:
 
 jobs:
